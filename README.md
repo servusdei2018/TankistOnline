@@ -37,4 +37,6 @@ Feel free to fork the project, and push contributions to the *beta* branch, **un
 
 This project is released under the GPLv3.0.
 
-It permits the Commercial and Private Use and Modification, Distribution, and Patent Priviledges. However, the Conditions are you disclose the source code, use the **same license**, include both the license and copyright notice, and state changes.
+It permits the Commercial and Private Use and Modification, Distribution, and Patent Priviledges. However, the Conditions are you disclose the source code, use the **same license**, include both the license and copyright notice, and state changes. 
+
+*Disclaimer: This summary of the License in no way claims to be the authoratative license to which those who use this project are bound*
