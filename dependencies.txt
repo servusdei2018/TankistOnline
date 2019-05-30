@@ -1,0 +1,10 @@
+Global:
+	pyglet:
+		pip install pyglet
+		pip3 install pyglet
+
+For sound:
+	VLC Media player
+	Python VLC Bindings:
+		pip install python-vlc
+		pip3 install python-vlc

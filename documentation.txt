@@ -1,0 +1,3 @@
+Links that a contributor shall find useful:
+
+	Pyglet Docs: https://pyglet.readthedocs.io/en/pyglet-1.3-maintenance/index.html
