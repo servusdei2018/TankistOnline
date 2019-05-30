@@ -1,16 +1,5 @@
-# TankistOnline
-A Cross-Platform Lightweight 2D Tank Multiplayer Game in Python.
-
-## Running
-
-Current development is focused around `TankistOnlie_Client.py` and `TankClass.py`.
-
-To run the (mock) client, `python TankistOnline_Client.py` or `python3 TankistOnline_Client.py`
-
-## Dependencies
-
-- **Pyglet**
-- (Optional) **VLC-Python** bindings [Necessary for Sound Effects, Requires VLC Media Player to be installed.]
+# TankistOnline > BETA BRANCH
+Push commits to this branch, this is the work-in-progress branch. **Full** updates, without any further need of work, may be pushed directly to the Master Branch. Once this branch forms a full update, the Master Branch shall be updated accordingly.
 
 ## To-Do:
 
@@ -31,12 +20,4 @@ To run the (mock) client, `python TankistOnline_Client.py` or `python3 TankistOn
 
 ## Contributing
 
-Feel free to fork the project, and push contributions to the *beta* branch, **unless otherwise directed** by a help-wanted post in Issues.
-
-## License
-
-This project is released under the GPLv3.0.
-
-It permits the Commercial and Private Use and Modification, Distribution, and Patent Priviledges. However, the Conditions are you disclose the source code, use the **same license**, include both the license and copyright notice, and state changes. 
-
-*Disclaimer: This summary of the License in no way claims to be the authoratative license to which those who use this project are bound*
+Feel free to fork the project, and push contributions to the *beta* branch, **unless otherwise directed** by a help-wanted post
