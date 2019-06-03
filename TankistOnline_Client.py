@@ -9,8 +9,8 @@ window = pyglet.window.Window()
 player_sprite = None #Player sprite
 enemies = []
 
-playSound = True #Requires vlc media player, as well as the vlc python library to be
-				 #installed.
+playSound = False #Requires vlc media player, as well as the vlc python library to be
+				  #installed.
 
 theme = None
 
@@ -196,9 +196,10 @@ def on_draw():
 		
 		enemy.draw()
 
-	if bool(theme.is_playing()) == False:
+	if playSound == True:
+		if bool(theme.is_playing()) == False:
 		
-		theme.play()
+			theme.play()
 	
 if __name__ == "__main__":
 	
