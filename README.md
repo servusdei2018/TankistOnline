@@ -1,5 +1,5 @@
 # TankistOnline
-A Cross-Platform Lightweight 2D Tank Multiplayer Game in Python.
+A Cross-Platform Lightweight 2D Tank Multiplayer Game in Python. **Note that this is a work-in-progress**, and is not yet complete or playable.
 
 ## Running
 
