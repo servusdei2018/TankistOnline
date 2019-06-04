@@ -4,7 +4,15 @@ import TankClass
 
 from pyglet.window import key
 
-window = pyglet.window.Window()
+window = pyglet.window.Window(600, 400)
+window.set_caption('TankistOnline - Client')
+
+icon1 = pyglet.image.load('gfx/16x16.png')
+icon2 = pyglet.image.load('gfx/32x32.png')
+window.set_icon(icon1, icon2)
+
+icon1 = None
+icon2 = None
 
 player_sprite = None #Player sprite
 enemies = []
@@ -27,6 +35,10 @@ def main():
 	
 	player_sprite.x = 100
 	player_sprite.y = 100
+	
+	player_sprite.absx = 100
+	player_sprite.absy = 100
+	
 	player_sprite.setXY()
 	
 	tempEnemies()
@@ -48,6 +60,10 @@ def newEnemy():
 	
 	enemy.x = 50
 	enemy.y = 50
+	
+	enemy.absx = 50
+	enemy.absy = 50
+	
 	enemy.setXY()
 	
 	return enemy
@@ -85,8 +101,8 @@ def on_key_press(symbol, modifiers):
 			boom = vlc.MediaPlayer("sfx/boom.mp3")
 			boom.play()
 		
-		myx = player_sprite.x
-		myy = player_sprite.y
+		myx = player_sprite.absx
+		myy = player_sprite.absy
 		
 		rads = math.radians(player_sprite.realRotation)
 		
@@ -95,8 +111,8 @@ def on_key_press(symbol, modifiers):
 		
 		for enemy in enemies:
 			
-				enx = enemy.x
-				eny = enemy.y
+				enx = enemy.absx
+				eny = enemy.absy
 				
 				dist = int(math.hypot(myx - enx, myy - eny))
 				
@@ -163,9 +179,66 @@ def on_text_motion(motion):
 			x = player_sprite.x
 			y = player_sprite.y
 			
+			ax = player_sprite.absx
+			ay = player_sprite.absy
+			
 			player_sprite.x, player_sprite.y = move(x, y, 4, angle_rad)
+			player_sprite.absx, player_sprite.absy = move(ax, ay, 4, angle_rad)
 			
 			player_sprite.move()
+			
+			if x < 75:
+				#Update X values, don't touch the absolutes.
+				
+				difx = 75-x
+				
+				player_sprite.x += difx
+			
+				player_sprite.move()
+			
+				for enemy in enemies:
+					
+					enemy.x += difx
+					enemy.move()
+			
+			elif x > 525:
+				
+				difx = x-525
+				
+				player_sprite.x -= difx
+				
+				player_sprite.move()
+				
+				for enemy in enemies:
+					
+					enemy.x -= difx
+					enemy.move()
+					
+			if y < 75:
+				
+				dify = 75-y
+				
+				player_sprite.y += dify
+			
+				player_sprite.move()
+			
+				for enemy in enemies:
+					
+					enemy.y += dify
+					enemy.move()
+			
+			elif y > 325:
+				
+				dify = y-325
+				
+				player_sprite.y -= dify
+			
+				player_sprite.move()
+			
+				for enemy in enemies:
+					
+					enemy.y -= dify
+					enemy.move()
 			
 			return
 			
@@ -177,14 +250,87 @@ def on_text_motion(motion):
 			x = player_sprite.x
 			y = player_sprite.y
 			
-			player_sprite.x, player_sprite.y = move(x, y, 4, angle_rad)
+			ax = player_sprite.absx
+			ay = player_sprite.absy
+			
+			player_sprite.x, player_sprite.y = move(x, y, -4, angle_rad)
+			player_sprite.absx, player_sprite.absy = move(ax, ay, -4, angle_rad)
 			
 			player_sprite.move()
+			
+			if x < 75:
+				#Update X values, don't touch the absolutes.
+				
+				difx = 75-x
+				
+				player_sprite.x += difx
+			
+				player_sprite.move()
+			
+				for enemy in enemies:
+					
+					enemy.x += difx
+					enemy.move()
+			
+			elif x > 525:
+				
+				difx = x-525
+				
+				player_sprite.x -= difx
+				
+				player_sprite.move()
+				
+				for enemy in enemies:
+					
+					enemy.x -= difx
+					enemy.move()
+			
+			if y < 75:
+				
+				dify = 75-y
+				
+				player_sprite.y += dify
+			
+				player_sprite.move()
+			
+				for enemy in enemies:
+					
+					enemy.y += dify
+					enemy.move()
+			
+			elif y > 325:
+				
+				dify = y-325
+				
+				player_sprite.y -= dify
+			
+				player_sprite.move()
+			
+				for enemy in enemies:
+					
+					enemy.y -= dify
+					enemy.move()
 		
 def move(x, y, speed, angle_in_radians):
     new_x = x + (speed*math.cos(angle_in_radians))
     new_y = y + (speed*math.sin(angle_in_radians))
     return new_x, new_y
+		
+def update(dt, overflow):
+	
+	#Perform check for need to redraw.
+	
+	#@todo
+	# add interface check and read input from server
+	
+	for enemy in enemies:
+		
+		if enemy.explosion:
+			
+			on_draw()
+			break
+	
+pyglet.clock.schedule(update, 1/15.0) #Update at 30Hz
 		
 @window.event
 def on_draw():

@@ -14,6 +14,9 @@ class Tank:
 	x = 0
 	y = 0
 	
+	absx = 0 #Absolute xy values.
+	absy = 0
+	
 	def loadImage(self, pathToImage, imageName):
 		
 		#Initialize this tank sprite with an image.
