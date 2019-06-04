@@ -18,9 +18,9 @@ To run the (mock) client, `python TankistOnline_Client.py` or `python3 TankistOn
 - [ ] Create the server. Because this is lightweight, it has to be single-threaded.
 
 ### Client-Side:
-- [ ] Create relative XY values for each Tank, in TankClass. This shall allow the viewport to move, to allow maps bigger
+- [X] Create relative XY values for each Tank, in TankClass. This shall allow the viewport to move, to allow maps bigger
       than the window size.
-- [ ] Update the screen even if the `on_draw()` event wasn't called.
+- [X] Update the screen even if the `on_draw()` event wasn't called.
 - [ ] Ensure that the theme is looped, currently when the track ends, it doesn't replay it.
 
 ### Misc:
