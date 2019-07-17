@@ -23,7 +23,8 @@ To run the (mock) client, `python TankistOnline_Client.py` or `python3 TankistOn
 - [X] Create relative XY values for each Tank, in TankClass. This shall allow the viewport to move, to allow maps bigger
       than the window size.
 - [X] Update the screen even if the `on_draw()` event wasn't called.
-- [ ] Ensure that the theme is looped, currently when the track ends, it doesn't replay it.
+- [X] Ensure that the theme is looped, currently when the track ends, it doesn't replay it.
+- [ ] Make possible a scrollable terrain-background.
 
 ### Misc:
 
