@@ -17,7 +17,7 @@ icon2 = None
 player_sprite = None #Player sprite
 enemies = []
 
-playSound = False #Requires vlc media player, as well as the vlc python library to be
+playSound = True #Requires vlc media player, as well as the vlc python library to be
 				  #installed.
 
 theme = None
@@ -44,12 +44,15 @@ def main():
 	tempEnemies()
 	
 	if playSound:
-		
-		global theme
-		
-		theme = vlc.MediaPlayer("sfx/theme.mp3")
-		theme.play()
-	
+                global theme
+                instance = vlc.Instance()
+                theme = instance.media_list_player_new()
+                mediaList = instance.media_list_new()
+                mediaList.add_media('sfx/theme.mp3')
+                theme.set_media_list(mediaList)
+                theme.set_playback_mode(vlc.PlaybackMode.loop)
+                theme.play()
+                
 	pyglet.app.run()
 	
 def newEnemy():
