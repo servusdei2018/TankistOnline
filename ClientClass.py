@@ -32,6 +32,10 @@ class Client:
 		self.absx = random.randint(0, 750)
 		self.absy = random.randint(0, 750)
 
+	def fileno(self):
+		
+		return self.connection.fileno()
+
 	def send(self, message): #Send plaintext to a client
 		
 		self.connection.send(str(message))
