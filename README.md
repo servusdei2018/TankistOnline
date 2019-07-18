@@ -32,7 +32,8 @@ To run the (mock) client, `python TankistOnline_Client.py` or `python3 TankistOn
 
 - [ ] Document code more clearly
 - [ ] Optimization [it's always welcome, however, keep in mind our Cross-Platform mindset]
-- [ ] Creating and maintaining the [Wiki](https://github.com/servusDei2018/TankMMO/wiki)
+- [X] ~~Creating and maintaining the [Wiki](https://github.com/servusDei2018/TankMMO/wiki)~~
+- [ ] Make the [Wiki](https://github.com/servusDei2018/TankMMO/wiki) more concise.
 
 ## Contributing
 
