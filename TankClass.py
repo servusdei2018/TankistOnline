@@ -11,6 +11,9 @@ class Tank:
 	rotation = 0
 	realRotation = 0
 	
+	rotateLeftRequested = False
+	rotateRightRequested = False
+	
 	x = 0
 	y = 0
 	
