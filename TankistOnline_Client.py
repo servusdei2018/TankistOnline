@@ -73,27 +73,12 @@ def newEnemy():
 	
 def tempEnemies():
 	
+	#This procedure creates one enemy, used for the purposes of testing client-side
+	#code.
+	
 	global enemies
 	
 	enemies.append(newEnemy())
-	
-	"""
-	pyglet.resource.path = ['gfx/sprites']
-	pyglet.resource.reindex()
-	
-	enemy_image = pyglet.resource.image("red.png")
-	
-	enemy_image = centralize(enemy_image)
-	
-	newEnemy = pyglet.sprite.Sprite(img=enemy_image, x=200, y=100)
-
-	enemy_image = None
-	
-	enemies.append(newEnemy)
-	enemyRotations.append(0)
-
-	newEnemy = None
-	"""
 
 @window.event
 def on_key_press(symbol, modifiers):
@@ -137,7 +122,6 @@ def on_key_press(symbol, modifiers):
 			
 
 @window.event
-
 def on_key_release(symbol, modifiers):
 	if symbol == key.RIGHT:
 		player_sprite.rotateRightRequested = False
@@ -180,6 +164,7 @@ def on_text_motion(motion):
 			player_sprite.move()
 			
 			if x < 75:
+				
 				#Update X values, don't touch the absolutes.
 				
 				difx = 75-x
@@ -312,44 +297,82 @@ def update(dt, overflow):
 	
 	#Perform check for need to redraw.
 	
-	#@todo
-	# add interface check and read input from server
+	# TODO: add interface check and read input from server
+	# Note: rotation speed is always 3 (in the future, different speeds could be implemented
+	#	for different hulls).
 	
-	# we could put this in a loop and do it for each tank from server
+	need_draw = False #We don't want to draw more than we have to, so we'll set need_draw
+			  #to True if we want on_draw() to be called at the end of our checks.
 	
-	# Also: rotation speed should be defined in the tank class or sent by the server
-	# if it may vary
 	if player_sprite.rotateRightRequested:
+		player_sprite.rotateRightRequested = False
+		player_sprite.rotateLeftRequested = False
+		
 		player_sprite.rotation += 3
-		player_sprite.rotate()
 		player_sprite.realRotation -= 3
 		
 		if player_sprite.rotation > 359:
 			player_sprite.rotation = 0
-	
-		if player_sprite.realRotation < 0:
+		elif player_sprite.realRotation < 0:
 			player_sprite.realRotation = 359
 			
 		player_sprite.rotate()
+
 	elif player_sprite.rotateLeftRequested:
+		player_sprite.rotateRightRequested = False
+		player_sprite.rotateLeftRequested = False
+		
 		player_sprite.rotation -= 3
 		player_sprite.realRotation += 3
 		
 		if player_sprite.rotation < 0:
 			player_sprite.rotation = 359
-	
-		if player_sprite.realRotation > 360:
+		elif player_sprite.realRotation > 360:
 			player_sprite.realRotation = 1
 
 		player_sprite.rotate()
-	
+		
+	if player_sprite.explosion:
+		
+		need_draw = True
 	
 	for enemy in enemies:
 		
+		if enemy.rotateRightRequested:
+			enemy.rotateRightRequested = False
+			enemy.rotateLeftRequested = False
+			
+			enemy.rotation += 3
+			enemy.realRotation -= 3
+		
+			if enemy.rotation > 359:
+				enemy.rotation = 0
+			elif enemy.realRotation < 0:
+				enemy.realRotation = 359
+			
+			enemy.rotate()
+
+		elif enemy.rotateLeftRequested:
+			enemy.rotateRightRequested = False
+			enemy.rotateLeftRequested = False
+			
+			enemy.rotation -= 3
+			enemy.realRotation += 3
+		
+			if enemy.rotation < 0:
+				enemy.rotation = 359
+			elif enemy.realRotation > 360:
+				enemy.realRotation = 1
+
+			enemy.rotate()
+		
 		if enemy.explosion:
 			
-			on_draw()
-			break
+			need_draw = True
+
+	if need_draw:
+		
+		on_draw()
 	
 pyglet.clock.schedule(update, 1/15.0) #Update at 30Hz
 		
