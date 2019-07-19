@@ -97,8 +97,14 @@ def tempEnemies():
 
 @window.event
 def on_key_press(symbol, modifiers):
-	
-	if symbol == key.SPACE:
+	# TODO: send these requests to the server
+
+	if symbol == key.RIGHT:
+		player_sprite.rotateRightRequested = True
+	elif symbol == key.LEFT:
+		player_sprite.rotateLeftRequested = True
+		
+	elif symbol == key.SPACE:
 
 		if playSound:
 			boom = vlc.MediaPlayer("sfx/boom.mp3")
@@ -131,45 +137,28 @@ def on_key_press(symbol, modifiers):
 			
 
 @window.event
+
+def on_key_release(symbol, modifiers):
+	if symbol == key.RIGHT:
+		player_sprite.rotateRightRequested = False
+	elif symbol == key.LEFT:
+		player_sprite.rotateLeftRequested = False
+
+
+@window.event
 def on_text_motion(motion):
 	
 	global player_sprite, realRotation
+
+	# all this should be moved to the key_press and key_release part
 	
 	if motion == key.MOTION_RIGHT:
-		
+		pass
 		#The client shall not perform rotation, it shall instead communicate its rotation
 		#to the server which shall return its new rotation.
 		
-		player_sprite.rotation += 3
-		player_sprite.rotate()
-		player_sprite.realRotation -= 3
-		
-		if player_sprite.rotation > 359:
-			player_sprite.rotation = 0
-	
-		if player_sprite.realRotation < 0:
-			player_sprite.realRotation = 359
-			
-		player_sprite.rotate()
-			
-		return
-			
-	elif motion == key.MOTION_LEFT:
-		
-		#As above.
-		
-		player_sprite.rotation -= 3
-		player_sprite.realRotation += 3
-		
-		if player_sprite.rotation < 0:
-			player_sprite.rotation = 359
-	
-		if player_sprite.realRotation > 360:
-			player_sprite.realRotation = 1
+		# ... send the "move right request" to the server
 
-		player_sprite.rotate()
-
-		return
 	
 	else:
 		
@@ -325,6 +314,35 @@ def update(dt, overflow):
 	
 	#@todo
 	# add interface check and read input from server
+	
+	# we could put this in a loop and do it for each tank from server
+	
+	# Also: rotation speed should be defined in the tank class or sent by the server
+	# if it may vary
+	if player_sprite.rotateRightRequested:
+		player_sprite.rotation += 3
+		player_sprite.rotate()
+		player_sprite.realRotation -= 3
+		
+		if player_sprite.rotation > 359:
+			player_sprite.rotation = 0
+	
+		if player_sprite.realRotation < 0:
+			player_sprite.realRotation = 359
+			
+		player_sprite.rotate()
+	elif player_sprite.rotateLeftRequested:
+		player_sprite.rotation -= 3
+		player_sprite.realRotation += 3
+		
+		if player_sprite.rotation < 0:
+			player_sprite.rotation = 359
+	
+		if player_sprite.realRotation > 360:
+			player_sprite.realRotation = 1
+
+		player_sprite.rotate()
+	
 	
 	for enemy in enemies:
 		
