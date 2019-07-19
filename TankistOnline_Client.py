@@ -305,8 +305,6 @@ def update(dt, overflow):
 			  #to True if we want on_draw() to be called at the end of our checks.
 	
 	if player_sprite.rotateRightRequested:
-		player_sprite.rotateRightRequested = False
-		player_sprite.rotateLeftRequested = False
 		
 		player_sprite.rotation += 3
 		player_sprite.realRotation -= 3
@@ -319,8 +317,6 @@ def update(dt, overflow):
 		player_sprite.rotate()
 
 	elif player_sprite.rotateLeftRequested:
-		player_sprite.rotateRightRequested = False
-		player_sprite.rotateLeftRequested = False
 		
 		player_sprite.rotation -= 3
 		player_sprite.realRotation += 3
@@ -339,8 +335,6 @@ def update(dt, overflow):
 	for enemy in enemies:
 		
 		if enemy.rotateRightRequested:
-			enemy.rotateRightRequested = False
-			enemy.rotateLeftRequested = False
 			
 			enemy.rotation += 3
 			enemy.realRotation -= 3
@@ -353,8 +347,6 @@ def update(dt, overflow):
 			enemy.rotate()
 
 		elif enemy.rotateLeftRequested:
-			enemy.rotateRightRequested = False
-			enemy.rotateLeftRequested = False
 			
 			enemy.rotation -= 3
 			enemy.realRotation += 3
@@ -394,5 +386,3 @@ def on_draw():
 if __name__ == "__main__":
 	
 	main()
-	
-	
