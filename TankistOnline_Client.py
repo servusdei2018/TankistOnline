@@ -334,30 +334,6 @@ def update(dt, overflow):
 	
 	for enemy in enemies:
 		
-		if enemy.rotateRightRequested:
-			
-			enemy.rotation += 3
-			enemy.realRotation -= 3
-		
-			if enemy.rotation > 359:
-				enemy.rotation = 0
-			elif enemy.realRotation < 0:
-				enemy.realRotation = 359
-			
-			enemy.rotate()
-
-		elif enemy.rotateLeftRequested:
-			
-			enemy.rotation -= 3
-			enemy.realRotation += 3
-		
-			if enemy.rotation < 0:
-				enemy.rotation = 359
-			elif enemy.realRotation > 360:
-				enemy.realRotation = 1
-
-			enemy.rotate()
-		
 		if enemy.explosion:
 			
 			need_draw = True
