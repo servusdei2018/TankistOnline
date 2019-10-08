@@ -29,7 +29,7 @@ def main():
 
 	global player_sprite
 	
-	player_sprite = TankClass.Tank()
+	player_sprite = TankClass.Tank(isPlayer=True)
 	
 	player_sprite.loadImage('gfx/sprites', "blue.png")
 	
@@ -337,6 +337,8 @@ def update(dt, overflow):
 		if enemy.explosion:
 			
 			need_draw = True
+		if enemy.removeable:
+			enemies.remove(enemy)
 
 	if need_draw:
 		
