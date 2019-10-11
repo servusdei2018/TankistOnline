@@ -18,7 +18,7 @@ To run the (mock) client, `python TankistOnline_Client.py` or `python3 TankistOn
 
 ### Server-Side:
 - [X] ~~Create the server. Because this is lightweight, it has to be single-threaded.~~
-- [ ] Add a HP and a death system to the server.
+- [X] ~~Add a HP and a death system to the server.~~
 
 ### Client-Side:
 - [X] ~~Create relative XY values for each Tank, in TankClass. This shall allow the viewport to move, to allow maps bigger~~
