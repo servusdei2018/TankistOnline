@@ -1,7 +1,7 @@
 TankistOnline
 -------------
 
-A free, lightweight and fast 3D Tank MMO.
+A free, lightweight and fast 2D Tank MMO.
 
 
  . Programming: servusdei2018@github, palrogg@github.
@@ -13,4 +13,4 @@ A free, lightweight and fast 3D Tank MMO.
 	. theme.mp3 by tgfcoder <https://twitter.com/tgfcoder> 
 		licensed under CC-BY-3 <http://creativecommons.org/licenses/by/3.0/>
  . Contributors:
-	. be the first! fork, edit, push!
+	. palrogg@github
