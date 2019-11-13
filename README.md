@@ -23,7 +23,7 @@ and if things go better than expected, it may feature any of the following:
 
 Once again, special thanks to all our contributors and everyone who is helping with this project!
 
-###Changelog:
+### Changelog:
 
 The project was last updated on `November 8, 2019` with the re-writing of the Server and large modification of the Client.
 
