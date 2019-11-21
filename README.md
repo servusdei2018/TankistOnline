@@ -9,7 +9,8 @@ A Cross-Platform Lightweight 2D Tank Multiplayer Game in Python 2/3.
 
 **Cross-Platform** -- Windows, Mac, Linux; anything that runs Python.
 
-![Build #13 Screenshot](https://github.com/servusDei2018/servusdei2018.github.io/blob/TankistOnline/Tankist_Screenshot.png?raw=true)
+![Build #52 Screenshot](https://github.com/servusDei2018/servusdei2018.github.io/blob/master/screenShots/connecting.jpg?raw=true)
+![Build #52 Screenshot](https://github.com/servusDei2018/servusdei2018.github.io/blob/master/screenShots/gameplay.jpg?raw=true)
 
 ## UPDATES
 
