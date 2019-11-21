@@ -4,7 +4,9 @@ A Cross-Platform Lightweight 2D Tank Multiplayer Game in Python 2/3.
 ### Commitments:
 
 **Tiny System Requirements** -- A Raspberry Pi can run a server and 4 clients, with room to spare. The RPi is a 1Ghz quad core processor with 1 GB of RAM.
+
 **Tiny Size** -- v0.1:Alpha is < 137 KB (unzipped)
+
 **Cross-Platform** -- Windows, Mac, Linux; anything that runs Python.
 
 ![Build #13 Screenshot](https://github.com/servusDei2018/servusdei2018.github.io/blob/TankistOnline/Tankist_Screenshot.png?raw=true)
@@ -34,6 +36,10 @@ run Tankist on your own computer at a specified time each day/week/month -- and 
 made available via this repository. If you have any questions about hosting Tankist, need help choosing or
 setting up a VPS, or questions about sponsoring a Server, please open a new issue.
 
+### Upcoming: Version 0.12 Alpha
+
+Version 0.12 Alpha should be released by December 13th and feature a scrolling background.
+
 ### Upcoming: Version 0.2 Alpha
 
 Version 0.2 Alpha should be available as soon as mid-December, but definitely by the end of January, 2020. It shall feature:
@@ -52,6 +58,9 @@ And things that __may__ make an appearance in *future* releases:
 ```
 -Different TURRETS that do different amounts of damages from different ranges
 -Tank skins to customize the look and feel
+-Capture the flag mode
+-Deathmatch mode
+-Team deathmatch mode
 ```
 
 ### Changelog:
