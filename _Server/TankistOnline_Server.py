@@ -1,7 +1,12 @@
 """
-TankistOnline - Server
+TankistOnline - Server [Python 2.7+/3]
+Copyright (C) 2019. All Rights Reserved.
 
-The server has been re-written and is under bugtesting.
+The Server has no dependencies besides the standard library, and
+can work with Python 2.7+, Python 3.x, and PyPy (reccomended).
+
+For the most optimized experience, PyPy is reccomended, although
+there is little performance difference between PyPy and Python 3.x
 """
 
 import math, socket, sys
@@ -9,8 +14,8 @@ import math, socket, sys
 from ClientClass import Client
 from time import sleep
 
-MAP_WIDTH  = 1800 #The width of the map, in PIXELS.
-MAP_HEIGHT = 1200 #The height of the map, in PIXELS.
+MAP_WIDTH  = 600 #The width of the map, in PIXELS.
+MAP_HEIGHT = 400 #The height of the map, in PIXELS.
 sock = None #Server socket
 players = {} #Player table
 
@@ -22,8 +27,9 @@ def main():
 	
 	global sock
 	
-	print('[TankistOnline - Server]')
-	print('         v1.0')
+	print('[---------TankistOnline - Server---------]')
+	print('                    v1.0')
+	print(' Copyright (C) 2019. All Rights Reserved.')
 	
 	#Create socket
 	print('[ ] Creating socket...')
@@ -35,8 +41,8 @@ def main():
 	
 	try:
 		
-		HOST = '127.0.0.1'
-		PORT = 2019
+		HOST = '127.0.0.1' #Localhost. Can be '127.0.0.1', '0.0.0.0', 'localhost'
+		PORT = 2019 #Port on which to run the server
 		
 		sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) #Reuse address if in use
 		sock.bind((HOST, PORT)) #Bind socket to localhost, port 2019
@@ -57,39 +63,73 @@ def main():
 	
 	while True:
 		
-		sleep(.2)
+		sleep(.05)
 		cycle() #One cycle of processing
 		
 def cycle():
+	
+	"""
+	Cycle through packets, processing them.
+	"""
 	
 	global players
 	
 	packets = read_all()
 	
+	updateIdles(packets)
+	
 	for packet in packets:
 	
-		#print('%s, %s' % (packet[0], packet[1]))
 		process(packet)
+	
+def updateIdles(packets):
+	
+	"""
+	Keep track of how long each player is idle, and if he's idle for
+	one minute or longer, boot him out.
+	"""
+	
+	addrs = []
+	for pk in packets:
+		addrs.append(pk[1])
+		
+	connsToDelete = []
+		
+	for con in players:
+		if con not in addrs:
+			players[con].idles += 1
+			
+			if players[con].idles >= 1200: #1 minute of idle and you're out
+				#That tank idled out.
+				broadcast('tko:destroy %s' % players[con].nick)
+				
+				#Add him to the list to be removed from the player list.
+				connsToDelete.append(con)
+		else:
+			players[con].idles = 0
+			
+	for con in connsToDelete:
+		del(players[players[con].address])
 	
 def process(packet):
 	
-	global players
+	"""
+	Process a packet's contents.
+	"""
 	
-	#Process a packet
+	global players
 	
 	data = packet[0]
 	addr = packet[1]
 	
-	print(data)
+	print('%s sent: %s' % (data, addr))
 	
 	if addr not in players:
 		
-		#If a player is not in the player map, he has shown no proof that
-		#he is a client for the game.
-		#All clients, when first connecting to the server,
-		#send "tko:connect NICKNAME"
-		
-		print('addr not in players')
+		"""
+		If a player is not in the player map, he has shown no proof that he is a client for the game.
+		All clients, when first connecting to the server, send "tko:connect NICKNAME"
+		"""
 		
 		if len(data.split()) > 1:
 			data = data.split()
@@ -98,11 +138,18 @@ def process(packet):
 			
 		if data[0] != 'tko:newplayer':
 			return
+			
+		if len(data) != 2:
+			return
 		
 		#A new player has connected.
+		nick = data[1]
+		
+		if isTaken(nick):
+			return
 		
 		players[addr] = Client(addr) #Add him to the player map
-		players[addr].nick = data[1] #Give him a nickname
+		players[addr].nick = nick #Give him a nickname
 		
 		broadcast('tko:newplayer %s' % players[addr].nick)
 		broadcast('tko:xy %s %s %s' % (players[addr].nick, players[addr].absx, players[addr].absy))
@@ -119,7 +166,9 @@ def process(packet):
 		
 def read_all():
 	
-	#Read all packets until none are found -- when none are found, recvfrom() returns error
+	"""
+	Read all packets until none are found - when none are found, recvfrom() returns error
+	"""
 	
 	packets = []
 	
@@ -136,7 +185,9 @@ def read_all():
 	
 def broadcast(msg):
 	
-	#Broadcast a message to all clients
+	"""
+	Broadcast a message to all clients
+	"""
 	
 	print('sending: '+msg)
 	
@@ -145,18 +196,31 @@ def broadcast(msg):
 		
 def move(x, y, speed, angle_in_radians):
 	
-	#Move a point.
+	"""
+	Move a point in direction :angle_in_radians: with speed :speed: from :x:, :y:
+	"""
 	
-    new_x = x + (speed*math.cos(angle_in_radians))
-    new_y = y + (speed*math.sin(angle_in_radians))
-    
-    return new_x, new_y
+	new_x = x + (speed*math.cos(angle_in_radians))
+	new_y = y + (speed*math.sin(angle_in_radians))
+	
+	return int(new_x), int(new_y)
+	
+def isTaken(nick):
+	
+	"""
+	Returns a boolean value whether a nickname is already registered in the
+	player pool.
+	"""
+	
+	for plr in players:
+		player = players[plr]
+		if nick.lower() == player.nick.lower():
+			return True
+			
+	return False
     
 """
-
 -------BEGIN TKO PROTOCOL HANDLERS--------
-
-
 """
 		
 def _tko_rotate(addr, data):
@@ -183,13 +247,13 @@ def _tko_rotate(addr, data):
 		
 	if degree == '+':
 		
-		conn.rotation -= 3
-		conn.realRotation += 3
+		conn.rotation -= 12
+		conn.realRotation += 12
 		
 	elif degree == '-':
 		
-		conn.rotation += 3
-		conn.realRotation -= 3
+		conn.rotation += 12
+		conn.realRotation -= 12
 		
 	#Make sure there are no superlative degrees.
 		
@@ -234,17 +298,17 @@ def _tko_move(addr, data):
 		
 	conn = players[addr] #Clone the object, for ease of reference
 	
-	angle_rad = math.radians(conn.realRotation)
+	angle_rad = math.radians(conn.rotation)
 		
 	#Move the tank.
 		
 	if degree == '+':
 		
-		conn.absx, conn.absy = move(conn.absx, conn.absy, 4, angle_rad) #Move forwards
+		conn.absx, conn.absy = move(conn.absx, conn.absy, 16, angle_rad) #Move forwards
 		
 	elif degree == '-':
 		
-		conn.absx, conn.absy = move(conn.absx, conn.absy, -4, angle_rad) #Move backwards
+		conn.absx, conn.absy = move(conn.absx, conn.absy, -16, angle_rad) #Move backwards
 		
 	#Validate positions, to make sure nobody moves off the map's edges.
 		
@@ -262,6 +326,35 @@ def _tko_move(addr, data):
 	#Instruct clients to move the client.
 	broadcast('tko:xy %s %s %s' % (conn.nick, conn.absx, conn.absy))
 		
+def _tko_newplayer(addr, data):
+	
+	"""
+	A player has reconnected from the same IP and Port.
+	"""
+
+	global players
+	
+	print('Re-connection from: %s port %s' % (addr[0], addr[1]))
+
+	#Delete the old data
+	broadcast('tko:destroy %s' % players[addr].nick)
+	del(players[addr])
+	
+	if len(data) != 2:
+		return
+		
+	#Create a new player
+	nick = data[1]
+		
+	if isTaken(nick):
+		return
+		
+	players[addr] = Client(addr) #Add him to the player map
+	players[addr].nick = nick #Give him a nickname
+	
+	broadcast('tko:newplayer %s' % players[addr].nick)
+	broadcast('tko:xy %s %s %s' % (players[addr].nick, players[addr].absx, players[addr].absy))
+	
 def _tko_refresh(addr, data):
 	
 	"""
@@ -272,7 +365,8 @@ def _tko_refresh(addr, data):
 	
 	for player in players:
 		plr = players[player]
-		broadcast('tko:refresh %s %s %s %s' % (plr.nick, plr.absx, plr.absy, plr.hp))
+		broadcast('tko:xy %s %s %s' % (plr.nick, plr.absx, plr.absy))
+		broadcast('tko:rotate %s %s %s' % (plr.nick, plr.rotation, plr.realRotation))
 		
 def _tko_shoot(addr, data):
 	
@@ -289,45 +383,61 @@ def _tko_shoot(addr, data):
 	
 	for client in players:
 		
-		if client.nick != conn.nick: #Don't let a guy shoot himself!
+		"""
+		Go through all players, for each one could be a possible
+		target because each one could be hit by the player's bullet.
+		"""
+		
+		client = players[client]
+		
+		if client.nick == conn.nick: #Don't let a guy shoot himself!
+			continue 
+		
+		enx = client.absx #Possible target's X, Y
+		eny = client.absy
+		
+		dist = int(math.hypot(conn.absx-enx, conn.absy-eny)) #Distance to enemy
+		rads = math.radians(conn.rotation)
+		
+		print('distance=%s' % dist)
+		
+		"""
+		We get the X, Y location of a bullet shot from the tank who is shooting,
+		and move it in the direction its turret is facing the distance to the current
+		enemy tank. If it is within a certain radius of the enemy tank, then it is a hit.
+		"""
+		
+		bulletX, bulletY = move(conn.absx, conn.absy, dist, rads)
+		
+		#If the difference between the coordinates
+		#is less than 80, it is a hit.
+		if (abs(bulletX-enx)+abs(bulletY-eny)) < 80:
+		
+			client.hp -= 1
 			
-			enx = client.absx #Possible target's X, Y
-			eny = client.absy
-			
-			dist = int(math.hypot(conn.absx-enx, conn.absy-eny)) #Distance to enemy
-			
-			#Now, we get the X, Y location of a bullet shot from the tank who is shooting,
-			#and move it in the direction its turret is facing the distance to the current
-			#enemy tank. If it is within a certain radius of the enemy tank, then it is a hit.
-			
-			bulletX, bulletY = move(conn.absx, conn.absy, dist, rads)
-			
-			if (abs(bulletX-enx)+abs(bulletY-eny)) < 80: #If the difference between the coordinates
-			#is less than 80, it is a hit.
-			
-				client.hp -= 1
+			#Instruct clients to project an explosion on him.
+			broadcast('tko:hit %s %s' % (client.nick, client.hp)) 
+		
+			if client.hp <= 0:
+				#That tank is dead.
+				broadcast('tko:destroy %s' % client.nick)
 				
-				#Instruct clients to project an explosion on him.
-				broadcast('tko:hit %s' % client.nick) 
-			
-				if client.hp <= 0:
-					#That tank is dead.
-					broadcast('tko:destroy %s' % client.nick)
-					
-					#Remove him from the player pool.
-					del(players[client.address])
-			
-				return
+				#Remove him from the player pool.
+				del(players[client.address])
+		
+			return
 
 if __name__ == "__main__":
 	
 	global pointers
 	
-	pointers = { #A dictionary of command-function mappings to handle the tko protocol
+	#Initialize a dictionary of command->function mappings, to handle the TKO Protocol
+	pointers = {
 	'tko:rotate': _tko_rotate,
 	'tko:move': _tko_move,
 	'tko:shoot': _tko_shoot,
-	'tko:refresh': _tko_refresh
+	'tko:refresh': _tko_refresh,
+	'tko:newplayer': _tko_newplayer
 	}	
 	
 	main()

@@ -1,10 +1,13 @@
 TankistOnline
 -------------
+Copyright (C) 2019. All Rights Reserved.
+----------------------------------------
 
 A free, lightweight and fast 2D Tank MMO.
 
 
- . Programming: servusdei2018@github, palrogg@github.
+ . Programming:
+	servusdei2018@github, palrogg@github.
  . Explosion spritesheet (gfx/explosion_transparent.png): 
 	Cliffski's explosion generator (http://www.positech.co.uk/content/explosion/explosiongenerator.html)
  . Tank Icon (gfx/16x16.png & gfx/32x32.png):

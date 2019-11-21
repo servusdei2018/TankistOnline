@@ -1,0 +1,3 @@
+Ideas:
+  -A special logo for Christmas (a santa hat, for client)
+  -A server selection dialog (for client), with nice UX, graphics

@@ -1,34 +1,72 @@
 """
 TankistOnline - Client Side Listener
+Copyright (C) 2019. All Rights Reserved.
 
-Handles UDP Packets to the client.
+Handles UDP Packets to/from the client.
 """
 
 import socket
+from random import randint
 
 class Listener:
 	
 	def __init__(self):
 		
-		#Initialize the Listener.
+		"""
+		Initialize the Listener.
 		
-		HOST = '127.0.0.1'
-		PORT = 2002
+		Params:
+		  :self: The new Listener object
+		"""
+		
+		bound=False
+		while not bound:
+			try:
+				bound = self._bind()
+			except Exception as e:
+				continue
+		
+	def _bind(self):
+		
+		"""
+		Attempt to bind to a random port. An error is raised if
+		the port is already in use.
+		
+		Params:
+		  :self: This Listener object
+		"""
+		
+		HOST = '127.0.0.1' #Hostname of this computer
+		PORT = 2000 + randint(0, 99) #Port to bind the socket to
 		
 		self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-		self.sock.bind((HOST, PORT)) #Bind socket to localhost, port 2019
-		self.sock.setblocking(0) #Make sure socket is not blocking
+		self.sock.bind((HOST, PORT))
+		self.sock.setblocking(0)
+		
+		return True
 		
 	def _send(self, msg, server):
 		
-		#Send message @msg to @server.
+		"""
+		Send a message message to the server.
+		
+		Params:
+		  :self: This Listener object
+		  :msg: A string containing a message
+		  :server: A tuple representing the IP Address and port of the server
+		"""
 		
 		self.sock.sendto(str(msg).encode(), server)
 		
 	def _read_all(self):
 	
-		#Read all packets until none are found -- when none are found, recvfrom() returns error
-	
+		"""
+		Read all packets until none are found, then return them. 
+		
+		Params:
+			:self: This Listener object
+		"""
+		
 		packets = []
 	
 		stop=False
@@ -38,5 +76,6 @@ class Listener:
 				data = data.decode()
 				packets.append((data, addr))
 			except Exception as e:
+				#When no more are found, recvfrom() raises an error.
 				stop=True
 		return packets
