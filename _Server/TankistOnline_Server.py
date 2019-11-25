@@ -41,7 +41,7 @@ def main():
 	
 	try:
 		
-		HOST = '127.0.0.1' #Localhost. Can be '127.0.0.1', '0.0.0.0', 'localhost'
+		HOST = '0.0.0.0' #Localhost. Can be '127.0.0.1', '0.0.0.0', 'localhost'
 		PORT = 2019 #Port on which to run the server
 		
 		sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) #Reuse address if in use
