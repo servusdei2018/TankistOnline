@@ -7,11 +7,15 @@ A free, lightweight and fast 2D Tank MMO.
 
 
  . Programming:
-	servusdei2018@github, palrogg@github, edbucks@github, s1nn105@github
+	servusdei2018@github, palrogg@github.
  . Explosion spritesheet (gfx/explosion_transparent.png): 
 	Cliffski's explosion generator (http://www.positech.co.uk/content/explosion/explosiongenerator.html)
  . Tank Icon (gfx/16x16.png & gfx/32x32.png):
 	Icon made by Freepik (freepik.com) from www.flaticon.com
+ . Map elements:
+	Bunch (http://blog-buch.rhcloud.com)
  . Music: 
 	. theme.mp3 by tgfcoder <https://twitter.com/tgfcoder> 
 		licensed under CC-BY-3 <http://creativecommons.org/licenses/by/3.0/>
+ . Contributors:
+	. palrogg@github

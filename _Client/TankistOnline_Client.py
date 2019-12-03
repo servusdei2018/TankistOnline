@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 """
 TankistOnline - Client [Python 3]
 Copyright (C) 2019. All Rights Reserved.
@@ -7,6 +9,7 @@ The client for TankistOnline.
 
 import math, pyglet, os
 import TankClass
+import tkinter as tk
 
 from ListenerClass import Listener
 from ViewportClass import Viewport
@@ -18,21 +21,20 @@ from random import randint
 window = pyglet.window.Window(600, 400)
 listener = Listener()
 server = ('127.0.0.1', 2019) #IP and Port of Server
-movement = {'mForward': False, 'mBackward': False, 'rLeft': False, 'rRight': False}
+movement = {'mForward': False, 'mBackward': False, 'rLeft': False, 
+	'rRight': False}
 view = Viewport(0, 0, 600, 400)
 enemies = []
 player = None
 tko_handlers = None
 gameOver = False
 connected = False
+attempts = 0
 
-#Initialize window
+#Initialize main-game window
 window.set_caption('TankistOnline - Client')
-icon1 = pyglet.image.load('gfx/16x16.png')
-icon2 = pyglet.image.load('gfx/32x32.png')
-window.set_icon(icon1, icon2)
-icon1 = None
-icon2 = None
+window.set_icon(pyglet.image.load('gfx/16x16.png'), 
+	pyglet.image.load('gfx/32x32.png'))
 
 #Initialize player sprite
 player = TankClass.Tank()
@@ -49,6 +51,14 @@ sprConnecting.loadImage('gfx/ui', 'connecting.png')
 sprConnecting.x, sprConnecting.y = 300, 205
 sprConnecting.setXY()
 
+#Initialize our map
+sprMap = TankClass.Tank()
+sprMap.loadImage('gfx/textures', 'map.png')
+sprMap.x, sprMap.y = 0, 0
+sprMap.setXY()
+sprMap.sprTank.scale = 2
+sprMap.isMap = True
+
 def main():
 
 	"""
@@ -56,16 +66,13 @@ def main():
 	"""
 	
 	print('[---------TankistOnline - Client---------]')
-	print('                    v1.0')
+	print('                  v1.2:Alpha')
 	print(' Copyright (C) 2019. All Rights Reserved.')
 	print()
-	print('Note: The client automatically tries to connect to')
-	print('the localhost, as there are no public clients.')
-	print('Eventually, we plan to setup a public server.')
-	print()
 
-	connectToServer()
+	selectServer()
 	pyglet.clock.schedule(update, 1/15.0) #Update at 30Hz
+	connectToServer()
 	pyglet.app.run()
 	
 """
@@ -73,6 +80,38 @@ def main():
 Client functions
 -----
 """
+
+def selectServer():
+	
+	"""
+	Let the user specify the connection details.
+	"""
+	
+	global server
+	
+	#When public hosts are available, we shall display them here.
+	#As there are none as of yet, manual configuration is assumed.
+	
+	print('[---Host Selection---]')
+	print('a) Manual host configuration')
+	input()
+	
+	hostSelected=False
+	while not hostSelected:
+		hostSelected=selectHost()
+		
+	server=(hostSelected, 2019)
+	
+def selectHost():
+	
+	"""
+	Prompt the user to enter a host, and make sure
+	it's valid.
+	"""
+	
+	tmpHost=input("Enter host IP >")
+	
+	return tmpHost
 	
 def connectToServer():
 	
@@ -82,9 +121,10 @@ def connectToServer():
 	
 	global player
 	
-	nickn = input('Enter a nickname:')
+	nickn = input('Enter a nickname >')
 	print('Connecting to server...')
 	send('tko:newplayer %s' % nickn) #Notify the server that we want to join in.
+	sleep(2)
 	player.nick = nickn
 	send('tko:refresh') #Ask for all information.
 	
@@ -123,7 +163,11 @@ def processServer():
 	
 	for message in messages:
 		
+		sentFrom = message[1]
 		message = message[0]
+		
+		if sentFrom != server and sentFrom[0] not in ('127.0.0.1', 'localhost'):
+			continue #No bogus packets
 		
 		kwarg = message.split()[0]
 		
@@ -163,7 +207,7 @@ def refreshRelativeXY(tank):
 	tx = tank.absx
 	ty = tank.absy
 	
-	tank.x, tank.y = view.updateXY(tx, ty)
+	tank.x, tank.y = view.updateXY(tx, ty, tank.isMap)
 	tank.setXY()
 
 def findTank(nick):
@@ -251,7 +295,14 @@ def on_draw():
 	Draw event
 	"""
 	
+	global gameOver
+	
 	window.clear()
+	
+	#Draw the map
+	
+	refreshRelativeXY(sprMap)
+	sprMap.draw()
 	
 	player.draw()
 	
@@ -271,11 +322,14 @@ def on_draw():
 	if gameOver:
 		window.clear()
 		sprGameOver.draw()
+		return
 		
 	#If we're not connected, draw the connecting screen
-	if not connected:
+	if not connected:		
+		
 		window.clear()
 		sprConnecting.draw()
+		sleep(0.2)
 		
 def hpString():
 	
@@ -302,6 +356,8 @@ def update(dt, kwarg):
 	  :kwarg: Un-used message from Pyglet
 	"""
 	
+	global attempts, gameOver
+	
 	#We don't want to draw more than we have to, so we'll set need_draw
 	#to True if we want on_draw() to be called at the end of our checks.
 	#need_draw = False 
@@ -317,23 +373,28 @@ def update(dt, kwarg):
 		send('tko:move -')
 		
 	if movement['rRight']:
-		send('tko:rotate +')
-	elif movement['rLeft']:
 		send('tko:rotate -')
+	elif movement['rLeft']:
+		send('tko:rotate +')
 		
 	#Second, check what the server says
 	processServer()
 	
-	#Third, check if we need to draw
-	#if player.explosion:
-	#	need_draw = True
-	#
-	#for enemy in enemies:
-	#	if enemy.explosion:
-	#		need_draw = True
-	#		
-	#if need_draw:
-	#	on_draw()
+	if not connected:
+	
+		attempts+=1
+		processServer()
+		sleep(.5)
+			
+		#We've tried to connect for 5 seconds.
+		if attempts > 10:
+			gameOver = True
+			print('[!] Failed to connect to server.')
+			print('  [info] Most probably, the specified IP address is\r')
+			print('   not running a Tankist Server.')
+			print('  [info] It could also be your firewall.')
+			return
+	
 	
 """
 -----
@@ -433,10 +494,11 @@ def _tko_xy(s):
 	tank.absy=absy
 	
 	if tank.nick == player.nick:
+		
 		#Update the viewport, to follow our tank
 		
 		global view
-		
+
 		view.topLeftX = tank.absx - 300
 		view.topLeftY = tank.absy + 200
 

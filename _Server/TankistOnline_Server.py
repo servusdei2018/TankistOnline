@@ -2,11 +2,19 @@
 TankistOnline - Server [Python 2.7+/3]
 Copyright (C) 2019. All Rights Reserved.
 
+--Running
+
 The Server has no dependencies besides the standard library, and
 can work with Python 2.7+, Python 3.x, and PyPy (reccomended).
 
 For the most optimized experience, PyPy is reccomended, although
 there is little performance difference between PyPy and Python 3.x
+
+--About
+
+This server utilizes UDP packets. UDP is pretty secure: it isn't
+detected by a port scan as there is no formal listener. None of
+the UDP packets are encrypted or compressed.
 """
 
 import math, socket, sys
@@ -41,6 +49,14 @@ def main():
 	
 	try:
 		
+		"""
+		Host options:
+		
+		127.0.0.1 - Allows connections only from this computer
+		0.0.0.0   - Allows connections from anywhere
+		localhost - Same as above
+		"""
+		
 		HOST = '0.0.0.0' #Localhost. Can be '127.0.0.1', '0.0.0.0', 'localhost'
 		PORT = 2019 #Port on which to run the server
 		
@@ -57,8 +73,12 @@ def main():
 		print('    Message ' + str(e[1]))
 		exit()
 	
-	#Entering main loop
+	print('[i] You may now connect to the server by running the client')
+	print('  and specifying "localhost" as the host IP. If you want to')
+	print('  connect from another computer, use the IP address of this')
+	print('  computer.')
 	
+	#Entering main loop
 	print('[i] Entering main loop...')
 	
 	while True:
@@ -270,7 +290,7 @@ def _tko_rotate(addr, data):
 	players[addr] = conn #Reflect changes from the clone to the base object
 		
 	#Instruct clients to rotate him.
-	broadcast('tko:rotate %s %s %s' % (conn.nick, conn.rotation, conn.realRotation))
+	broadcast('tko:rotate %s %s %s' % (conn.nick, conn.realRotation, conn.rotation))
 	
 def _tko_move(addr, data):
 	
@@ -298,7 +318,7 @@ def _tko_move(addr, data):
 		
 	conn = players[addr] #Clone the object, for ease of reference
 	
-	angle_rad = math.radians(conn.rotation)
+	angle_rad = math.radians(conn.realRotation)
 		
 	#Move the tank.
 		
@@ -366,7 +386,7 @@ def _tko_refresh(addr, data):
 	for player in players:
 		plr = players[player]
 		broadcast('tko:xy %s %s %s' % (plr.nick, plr.absx, plr.absy))
-		broadcast('tko:rotate %s %s %s' % (plr.nick, plr.rotation, plr.realRotation))
+		broadcast('tko:rotate %s %s %s' % (plr.nick, plr.realRotation, plr.rotation))
 		
 def _tko_shoot(addr, data):
 	
@@ -397,7 +417,7 @@ def _tko_shoot(addr, data):
 		eny = client.absy
 		
 		dist = int(math.hypot(conn.absx-enx, conn.absy-eny)) #Distance to enemy
-		rads = math.radians(conn.rotation)
+		rads = math.radians(conn.realRotation)
 		
 		print('distance=%s' % dist)
 		

@@ -56,7 +56,12 @@ class Listener:
 		  :server: A tuple representing the IP Address and port of the server
 		"""
 		
-		self.sock.sendto(str(msg).encode(), server)
+		try:
+			self.sock.sendto(str(msg).encode(), server)
+		except Exception as e:
+			print('[!] An exception occured when communicating to the host.')
+			print(' [info] Most probably, it is because of an invalid IP address.')
+			print(' [info] If not, there is a problem with your firewall.')
 		
 	def _read_all(self):
 	

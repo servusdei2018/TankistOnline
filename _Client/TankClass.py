@@ -24,6 +24,7 @@ class Tank:
 		self.realRotation = 0
 		self.hp = 10
 		self.nick = ''
+		self.isMap = False
 	
 		#Relative xy values.
 		self.x = -999
@@ -127,7 +128,7 @@ class Tank:
 				font_size=8,
 				x=self.x-8,
 				y=self.y+50)
-			lblNick.color = (0, 255, 0, 180) #RGBA
+			lblNick.color = (0, 255, 0, 255) #RGBA
 			lblNick.draw()
 
 	def _centralize(self, image):
