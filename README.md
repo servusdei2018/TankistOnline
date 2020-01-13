@@ -1,7 +1,7 @@
 # TankistOnline
 A Cross-Platform Lightweight 2D Tank Multiplayer Game in Python 2/3.
 
-![v0.2:Alpha Screenshot](https://github.com/servusDei2018/servusdei2018.github.io/blob/TankistOnline/v0.2-alpha.jpg?raw=true)
+![v0.2:Alpha Screenshot](https://github.com/servusDei2018/servusdei2018.github.io/blob/master/screenShots/tankist_screenshot.jpg?raw=true)
 
 ### Commitments:
 
