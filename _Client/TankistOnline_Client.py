@@ -102,7 +102,6 @@ def selectServer():
 		hostSelected=selectHost()
 		
 	server=(str(hostSelected), 2019)
-	print(server)
 	
 def selectHost():
 	
