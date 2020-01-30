@@ -52,12 +52,13 @@ def main():
 		"""
 		Host options:
 		
-		127.0.0.1 - Allows connections only from this computer
-		0.0.0.0   - Allows connections from anywhere
-		localhost - Same as above
+		'127.0.0.1' - Allows connections only from this computer
+		'0.0.0.0'   - Allows connections from anywhere?
+		'localhost' - Same as above?
+		'' - Bind to all available interfaces
 		"""
 		
-		HOST = '0.0.0.0' #Localhost. Can be '127.0.0.1', '0.0.0.0', 'localhost'
+		HOST = '' # '' binds to all available interfaces. Can be '127.0.0.1', '0.0.0.0', 'localhost'
 		PORT = 2019 #Port on which to run the server
 		
 		sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) #Reuse address if in use
