@@ -11,6 +11,7 @@ import math, pyglet, os
 import TankClass
 import tkinter as tk
 import socket
+import re
 
 from ListenerClass import Listener
 from ViewportClass import Viewport
@@ -110,9 +111,16 @@ def selectHost():
 	it's valid.
 	"""
 	
+	userhost = input("Enter host IP >")
+	check = bool(re.search('[a-zA-Z]', userhost))
+	print(check)
+	if check is True:
+		tmpHost = socket.gethostbyname(userhost)
+	else:
+		tmpHost = userhost
 
-	tmpHost = socket.gethostbyname(input("Enter host IP >"))
 	return tmpHost
+	
 	
 def connectToServer():
 	
