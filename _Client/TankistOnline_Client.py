@@ -10,6 +10,7 @@ The client for TankistOnline.
 import math, pyglet, os
 import TankClass
 import tkinter as tk
+import socket
 
 from ListenerClass import Listener
 from ViewportClass import Viewport
@@ -100,7 +101,8 @@ def selectServer():
 	while not hostSelected:
 		hostSelected=selectHost()
 		
-	server=(hostSelected, 2019)
+	server=(str(hostSelected), 2019)
+	print(server)
 	
 def selectHost():
 	
@@ -109,8 +111,8 @@ def selectHost():
 	it's valid.
 	"""
 	
-	tmpHost=input("Enter host IP >")
-	
+
+	tmpHost = socket.gethostbyname(input("Enter host IP >"))
 	return tmpHost
 	
 def connectToServer():
@@ -127,6 +129,7 @@ def connectToServer():
 	sleep(2)
 	player.nick = nickn
 	send('tko:refresh') #Ask for all information.
+
 	
 def newEnemy(nick):
 	
@@ -387,7 +390,7 @@ def update(dt, kwarg):
 		sleep(.5)
 			
 		#We've tried to connect for 5 seconds.
-		if attempts > 10:
+		if attempts > 120:
 			gameOver = True
 			print('[!] Failed to connect to server.')
 			print('  [info] Most probably, the specified IP address is\r')
