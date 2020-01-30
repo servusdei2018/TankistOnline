@@ -36,7 +36,7 @@ class Listener:
 		  :self: This Listener object
 		"""
 		
-		HOST = '127.0.0.1' #Hostname of this computer
+		HOST = '0.0.0.0' #Hostname of this computer (set to 127.0.0.1 for security)
 		PORT = 2000 + randint(0, 99) #Port to bind the socket to
 		
 		self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
