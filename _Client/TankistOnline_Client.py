@@ -389,7 +389,7 @@ def update(dt, kwarg):
 		sleep(.5)
 			
 		#We've tried to connect for 5 seconds.
-		if attempts > 120:
+		if attempts > 10:
 			gameOver = True
 			print('[!] Failed to connect to server.')
 			print('  [info] Most probably, the specified IP address is\r')
