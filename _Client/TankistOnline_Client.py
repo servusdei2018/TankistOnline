@@ -10,6 +10,8 @@ The client for TankistOnline.
 import math, pyglet, os
 import TankClass
 import tkinter as tk
+import socket
+import re
 
 from ListenerClass import Listener
 from ViewportClass import Viewport
@@ -93,14 +95,17 @@ def selectServer():
 	#As there are none as of yet, manual configuration is assumed.
 	
 	print('[---Host Selection---]')
-	print('a) Manual host configuration')
-	input()
-	
+	print('1) Manual host configuration')
+	print('2) Official Public Server')
+	userselection = int(input())
 	hostSelected=False
-	while not hostSelected:
-		hostSelected=selectHost()
-		
-	server=(hostSelected, 2019)
+	if userselection is 1:
+		while not hostSelected:
+			hostSelected=selectHost()
+	if userselection is 2:
+		hostSelected = socket.gethostbyname('tankistonline.skeltonkey.xyz')
+
+	server=(str(hostSelected), 2019)
 	
 def selectHost():
 	
@@ -109,9 +114,16 @@ def selectHost():
 	it's valid.
 	"""
 	
-	tmpHost=input("Enter host IP >")
-	
+	userhost = input("Enter host IP >")
+	check = bool(re.search('[a-zA-Z]', userhost))
+	print(check)
+	if check is True:
+		tmpHost = socket.gethostbyname(userhost)
+	else:
+		tmpHost = userhost
+
 	return tmpHost
+	
 	
 def connectToServer():
 	
@@ -127,6 +139,7 @@ def connectToServer():
 	sleep(2)
 	player.nick = nickn
 	send('tko:refresh') #Ask for all information.
+
 	
 def newEnemy(nick):
 	
