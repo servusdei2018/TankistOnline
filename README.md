@@ -13,7 +13,7 @@ A Cross-Platform Lightweight 2D Tank Multiplayer Game in Python 2/3.
 
 ### Public Server Operational!
 
-**Come on over** and checkout our new public server at tankistonline.mooo.com! Note that this is a new domain and it will take a couple hours for the domain to resolve.
+**Come on over** and checkout our new public server at **tankistonline.skeltonkey.xyz**!
 
 ### Version 0.2 Alpha Released!
 
