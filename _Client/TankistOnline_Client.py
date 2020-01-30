@@ -95,13 +95,16 @@ def selectServer():
 	#As there are none as of yet, manual configuration is assumed.
 	
 	print('[---Host Selection---]')
-	print('a) Manual host configuration')
-	input()
-	
+	print('1) Manual host configuration')
+	print('2) Official Public Server')
+	userselection = int(input())
 	hostSelected=False
-	while not hostSelected:
-		hostSelected=selectHost()
-		
+	if userselection is 1:
+		while not hostSelected:
+			hostSelected=selectHost()
+	if userselection is 2:
+		hostSelected = socket.gethostbyname('tankistonline.skeltonkey.xyz')
+
 	server=(str(hostSelected), 2019)
 	
 def selectHost():
